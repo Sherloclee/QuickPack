@@ -24,5 +24,9 @@ def load_json(obj_dict: dict):
 
 
 def load(raw_data: bytes):
-    # todo
+    """
+    :param raw_data:
+    :return: python class instance
+    """
+    # todo load from bytes
     pass
