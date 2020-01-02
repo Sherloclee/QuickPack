@@ -1,3 +1,4 @@
+import pickle as _pickle
 from .Packer import Packer
 
 
