@@ -60,16 +60,17 @@ def load_json(obj_dict: dict):
 
     for item in obj_dict.items():
         pattern = "(.*?)_Attr"
-        attr_name = item[0]
         attr_value = item[1]
         if isinstance(attr_value, dict):
+            attr_name = re.findall(pattern, item[0])[0]
             attr_value = load_json(attr_value)
+            setattr(temp_class, attr_name, attr_value)
 
     instance = temp_class()
 
     # todo  create temp_class by dynamic
 
-    return temp_class
+    return instance
 
 
 def load(raw_data: bytes):
@@ -103,8 +104,6 @@ if __name__ == "__main__":
 
     temp_dict = dump(temp)
     pprint(temp_dict)
-    print(type(temp_dict))
-    print(temp_dict['Module'])
-    print("\n")
+
     new_obj = load_json(temp_dict)
     pprint(dump(new_obj))
