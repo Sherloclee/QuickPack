@@ -58,15 +58,15 @@ def load_json(obj_dict: dict):
         temp_class = type(class_name, (object,), {"__module__": temp_module})
         pass
 
+    instance = temp_class()
+
     for item in obj_dict.items():
         pattern = "(.*?)_Attr"
         attr_value = item[1]
         if isinstance(attr_value, dict):
             attr_name = re.findall(pattern, item[0])[0]
             attr_value = load_json(attr_value)
-            setattr(temp_class, attr_name, attr_value)
-
-    instance = temp_class()
+            setattr(instance, attr_name, attr_value)
 
     # todo  create temp_class by dynamic
 
