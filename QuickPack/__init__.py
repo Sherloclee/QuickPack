@@ -1,5 +1,7 @@
-import pickle as _pickle
-from pprint import pprint
+from .Packer import Packer as _Packer
+
+if __name__ == "__main__":
+    from pprint import pprint
 import re
 
 # proto
@@ -32,13 +34,9 @@ def dump(obj) -> dict:
     pass
 
 
-def pack(obj) -> bytes:
-    # todo pack from object
-    pass
-
-
-def load_json(obj_dict: dict):
-    if value := obj_dict.get("value"):
+def load(obj_dict: dict):
+    if obj_dict.get("value") is not None:
+        value = obj_dict.get("value")
         return value
 
     module_name = obj_dict["Module"]
@@ -65,7 +63,7 @@ def load_json(obj_dict: dict):
         attr_value = item[1]
         if isinstance(attr_value, dict):
             attr_name = re.findall(pattern, item[0])[0]
-            attr_value = load_json(attr_value)
+            attr_value = load(attr_value)
             setattr(instance, attr_name, attr_value)
 
     # todo  create temp_class by dynamic
@@ -73,13 +71,21 @@ def load_json(obj_dict: dict):
     return instance
 
 
-def load(raw_data: bytes):
+def pack(obj) -> bytes:
+    new_pack = _Packer(obj)
+    data = new_pack.pack()
+    return data
+
+
+def unpack(raw_data: bytes):
     """
     :param raw_data:
     :return: python class instance
     """
     # todo load from bytes
-    pass
+    new_pack = _Packer(raw_data)
+    instance = new_pack.unpack()
+    return instance
 
 
 if __name__ == "__main__":
@@ -105,5 +111,5 @@ if __name__ == "__main__":
     temp_dict = dump(temp)
     pprint(temp_dict)
 
-    new_obj = load_json(temp_dict)
+    new_obj = load(temp_dict)
     pprint(dump(new_obj))
